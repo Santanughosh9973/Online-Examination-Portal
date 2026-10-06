@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +9,7 @@
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/certificates.css">
 </head>
+
 <body>
 
   <!-- Navigation Bar -->
@@ -41,7 +43,7 @@
   <!-- Main Content -->
   <main class="main-content">
     <div class="certificates-page-container">
-      
+
       <!-- Section Header -->
       <div class="section-header">
         <div>
@@ -59,11 +61,12 @@
       </div>
 
       <!-- Empty State -->
-      <div id="emptyCertificatesState" class="empty-attempts-state glass-card hidden">
+      <div id="emptyCertificatesState" class="empty-attempts-state glass-card hidden" style="padding: 20px">
         <div class="empty-icon" style="color: #f59e0b;">🏆</div>
         <h3>No Certificates Earned Yet</h3>
         <p style="color: var(--text-secondary); max-width: 480px;">
-          You haven't earned any certificates yet in this session. Complete any 100-question subject exam with a score of 50% or higher to unlock your official verified certificate!
+          You haven't earned any certificates yet in this session. Complete any 100-question subject exam with a score
+          of 50% or higher to unlock your official verified certificate!
         </p>
         <a href="dashboard.html" class="btn btn-primary btn-sm mt-4">
           <span>Explore Examination Topics</span> →
@@ -76,7 +79,7 @@
   <!-- Certificate Viewer & Print Modal -->
   <div class="modal-overlay" id="certificateModal">
     <div class="modal-card certificate-modal-content">
-      
+
       <!-- The Printable Document Container -->
       <div class="certificate-document" id="printableCertificateDoc">
         <div class="cert-doc-header">
@@ -91,7 +94,9 @@
         <div class="cert-student-name" id="certDocRecipientName">Student Name</div>
 
         <div class="cert-fulfillment-text">
-          for successfully demonstrating proficiency and passing the standardized comprehensive examination in <strong class="cert-course-highlight" id="certDocSubjectTitle">Subject Title</strong> with demonstrated academic excellence.
+          for successfully demonstrating proficiency and passing the standardized comprehensive examination in <strong
+            class="cert-course-highlight" id="certDocSubjectTitle">Subject Title</strong> with demonstrated academic
+          excellence.
         </div>
 
         <div class="cert-details-badges">
@@ -124,7 +129,8 @@
       </div>
 
       <!-- Modal Toolbar Actions (Hidden on Print) -->
-      <div style="background: var(--bg-surface-elevated); padding: 18px 24px; display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--border);">
+      <div
+        style="background: var(--bg-surface-elevated); padding: 18px 24px; display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--border);">
         <button type="button" class="btn btn-secondary" id="btnCloseCertModal">Close</button>
         <button type="button" class="btn btn-primary" id="btnPrintCertBtn">
           <span>🖨️</span> Print / Save PDF
@@ -264,4 +270,5 @@
     }
   </script>
 </body>
+
 </html>
