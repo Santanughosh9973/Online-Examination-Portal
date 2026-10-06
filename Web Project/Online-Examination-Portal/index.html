@@ -1,1868 +1,244 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <meta name="description"
-        content="Online Examination Portal - Student Quiz and Examination Management System">
-
-    <title>ExamPro - Online Examination Portal</title>
-
-    <!-- Google Font -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-        rel="stylesheet">
-
-    <!-- Main CSS -->
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ExamPro - Student Examination Portal</title>
+  <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/auth.css">
 </head>
-
 <body>
 
-    <!-- =====================================================
-         ANIMATED BACKGROUND
-    ====================================================== -->
+  <!-- Navigation Bar (Public) -->
+  <header class="navbar">
+    <a href="index.html" class="nav-brand">
+      <div class="nav-logo-icon">
+        <img src="assets/logo.svg" alt="ExamPro">
+      </div>
+      <div>
+        <div class="nav-brand-title">Exam<span>Pro</span></div>
+        <div class="nav-brand-sub">Examination System</div>
+      </div>
+    </a>
 
-    <div class="background-animation">
-
-        <div class="blob blob-1"></div>
-        <div class="blob blob-2"></div>
-        <div class="blob blob-3"></div>
-
+    <div class="nav-actions">
+      <button type="button" class="btn-theme-toggle" title="Toggle Theme">🌙</button>
     </div>
-
-
-    <!-- =====================================================
-         NAVIGATION BAR
-    ====================================================== -->
-
-    <header class="navbar">
-
-        <div class="logo">
-
-            <div class="logo-icon">
-                EP
-            </div>
-
-            <div class="logo-text">
-                <h2>Exam<span>Pro</span></h2>
-                <small>Online Examination Portal</small>
-            </div>
-
-        </div>
-
-
-        <div class="navbar-actions">
-
-            <button
-                class="icon-button"
-                id="themeToggle"
-                onclick="toggleTheme()"
-                title="Change Theme">
-
-                🌙
-
-            </button>
-
-            <button
-                class="logout-button hidden"
-                id="logoutButton"
-                onclick="logout()">
-
-                Logout
-
-            </button>
-
-        </div>
-
-    </header>
-
-
-    <!-- =====================================================
-         MAIN APPLICATION
-    ====================================================== -->
-
-    <main class="main-container">
-
-
-        <!-- =================================================
-             LOGIN PAGE
-        ================================================== -->
-
-        <section
-            id="loginPage"
-            class="page active-page">
-
-            <div class="login-container">
-
-
-                <!-- Login Information -->
-
-                <div class="login-intro">
-
-                    <div class="intro-badge">
-                        🎓 Student Examination System
-                    </div>
-
-                    <h1>
-                        Test Your
-                        <span>Knowledge</span>
-                    </h1>
-
-                    <p>
-                        Take online examinations, track your performance
-                        and earn certificates.
-                    </p>
-
-
-                    <div class="feature-list">
-
-                        <div class="feature-item">
-
-                            <div class="feature-icon">
-                                📝
-                            </div>
-
-                            <div>
-                                <strong>100 Questions</strong>
-                                <p>Comprehensive examination</p>
-                            </div>
-
-                        </div>
-
-
-                        <div class="feature-item">
-
-                            <div class="feature-icon">
-                                ⏱️
-                            </div>
-
-                            <div>
-                                <strong>Timed Examination</strong>
-                                <p>60 minutes per examination</p>
-                            </div>
-
-                        </div>
-
-
-                        <div class="feature-item">
-
-                            <div class="feature-icon">
-                                🔀
-                            </div>
-
-                            <div>
-                                <strong>Random Questions</strong>
-                                <p>Different pattern for every student</p>
-                            </div>
-
-                        </div>
-
-
-                        <div class="feature-item">
-
-                            <div class="feature-icon">
-                                🏆
-                            </div>
-
-                            <div>
-                                <strong>Digital Certificate</strong>
-                                <p>Get your certificate after completion</p>
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <!-- Login Card -->
-
-                <div class="login-card glass-card">
-
-                    <div class="login-header">
-
-                        <div class="login-icon">
-                            🔐
-                        </div>
-
-                        <h2>Student Login</h2>
-
-                        <p>
-                            Login to access your examinations
-                        </p>
-
-                    </div>
-
-
-                    <form id="loginForm">
-
-
-                        <!-- Username -->
-
-                        <div class="form-group">
-
-                            <label for="username">
-                                Username
-                            </label>
-
-                            <div class="input-wrapper">
-
-                                <span class="input-icon">
-                                    👤
-                                </span>
-
-                                <input
-                                    type="text"
-                                    id="username"
-                                    placeholder="Enter username"
-                                    autocomplete="username"
-                                    required>
-
-                            </div>
-
-                            <small
-                                class="error-message"
-                                id="usernameError">
-                            </small>
-
-                        </div>
-
-
-                        <!-- Password -->
-
-                        <div class="form-group">
-
-                            <label for="password">
-                                Password
-                            </label>
-
-                            <div class="input-wrapper">
-
-                                <span class="input-icon">
-                                    🔒
-                                </span>
-
-                                <input
-                                    type="password"
-                                    id="password"
-                                    placeholder="Enter password"
-                                    autocomplete="current-password"
-                                    required>
-
-                                <button
-                                    type="button"
-                                    class="password-toggle"
-                                    onclick="togglePassword()">
-
-                                    👁️
-
-                                </button>
-
-                            </div>
-
-                            <small
-                                class="error-message"
-                                id="passwordError">
-                            </small>
-
-                        </div>
-
-
-                        <!-- Remember Me -->
-
-                        <div class="login-options">
-
-                            <label class="checkbox-label">
-
-                                <input
-                                    type="checkbox"
-                                    id="rememberMe">
-
-                                <span>
-                                    Remember me
-                                </span>
-
-                            </label>
-
-
-                            <button
-                                type="button"
-                                class="link-button"
-                                onclick="showForgotPassword()">
-
-                                Forgot Password?
-
-                            </button>
-
-                        </div>
-
-
-                        <!-- Login Button -->
-
-                        <button
-                            type="submit"
-                            class="primary-button login-button">
-
-                            <span id="loginButtonText">
-                                Login to Portal
-                            </span>
-
-                            <span id="loginLoader" class="loader hidden">
-                            </span>
-
-                        </button>
-
-
-                    </form>
-
-
-                    <!-- Demo Account -->
-
-                    <div class="demo-account">
-
-                        <div class="demo-title">
-                            Demo Login
-                        </div>
-
-                        <div class="demo-details">
-
-                            <span>
-                                Username:
-                                <strong>student</strong>
-                            </span>
-
-                            <span>
-                                Password:
-                                <strong>123456</strong>
-                            </span>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- =================================================
-             QUIZ SELECTION PAGE
-        ================================================== -->
-
-        <section
-            id="quizSelectionPage"
-            class="page">
-
-            <div class="dashboard-container">
-
-
-                <!-- Dashboard Header -->
-
-                <div class="dashboard-header">
-
-                    <div>
-
-                        <div class="page-badge">
-                            📚 Examination Dashboard
-                        </div>
-
-                        <h1>
-                            Welcome,
-                            <span id="studentName">
-                                Student
-                            </span>
-                        </h1>
-
-                        <p>
-                            Select an examination to begin.
-                        </p>
-
-                    </div>
-
-
-                    <div class="student-profile-mini">
-
-                        <div class="profile-avatar">
-                            S
-                        </div>
-
-                        <div>
-
-                            <strong id="profileUsername">
-                                Student
-                            </strong>
-
-                            <small>
-                                Student
-                            </small>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <!-- Statistics -->
-
-                <div class="dashboard-stats">
-
-
-                    <div class="stat-card">
-
-                        <div class="stat-icon blue">
-                            📝
-                        </div>
-
-                        <div>
-                            <span>Available Exams</span>
-                            <strong id="availableExamCount">
-                                11
-                            </strong>
-                        </div>
-
-                    </div>
-
-
-                    <div class="stat-card">
-
-                        <div class="stat-icon green">
-                            🎯
-                        </div>
-
-                        <div>
-                            <span>Questions / Exam</span>
-                            <strong>
-                                100
-                            </strong>
-                        </div>
-
-                    </div>
-
-
-                    <div class="stat-card">
-
-                        <div class="stat-icon orange">
-                            ⏱️
-                        </div>
-
-                        <div>
-                            <span>Exam Duration</span>
-                            <strong>
-                                60 Min
-                            </strong>
-                        </div>
-
-                    </div>
-
-
-                    <div class="stat-card">
-
-                        <div class="stat-icon purple">
-                            🏆
-                        </div>
-
-                        <div>
-                            <span>Certificate</span>
-                            <strong>
-                                Yes
-                            </strong>
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <!-- Quiz Section -->
-
-                <div class="section-heading">
-
-                    <div>
-
-                        <h2>
-                            Choose Your Examination
-                        </h2>
-
-                        <p>
-                            Each examination contains 100 questions.
-                        </p>
-
-                    </div>
-
-
-                    <div class="quiz-search">
-
-                        <input
-                            type="text"
-                            id="quizSearch"
-                            placeholder="Search quiz..."
-                            oninput="searchQuiz()">
-
-                        <span>
-                            🔍
-                        </span>
-
-                    </div>
-
-                </div>
-
-
-                <!-- Quiz Cards -->
-
-                <div
-                    class="quiz-grid"
-                    id="quizGrid">
-
-
-                    <!-- Mathematics -->
-
-                    <article
-                        class="quiz-card"
-                        data-quiz="mathematics"
-                        onclick="selectQuiz('mathematics')">
-
-                        <div class="quiz-card-icon mathematics">
-                            🧮
-                        </div>
-
-                        <div class="quiz-card-content">
-
-                            <h3>
-                                Mathematics
-                            </h3>
-
-                            <p>
-                                Test your mathematical knowledge,
-                                formulas and problem-solving skills.
-                            </p>
-
-                            <div class="quiz-meta">
-
-                                <span>
-                                    📝 100 Questions
-                                </span>
-
-                                <span>
-                                    ⏱️ 60 Minutes
-                                </span>
-
-                            </div>
-
-                        </div>
-
-                        <div class="quiz-arrow">
-                            →
-                        </div>
-
-                    </article>
-
-
-                    <!-- Computer Fundamentals -->
-
-                    <article
-                        class="quiz-card"
-                        data-quiz="computer-fundamentals"
-                        onclick="selectQuiz('computer-fundamentals')">
-
-                        <div class="quiz-card-icon computer">
-                            💻
-                        </div>
-
-                        <div class="quiz-card-content">
-
-                            <h3>
-                                Computer Fundamentals
-                            </h3>
-
-                            <p>
-                                Basics of computers, hardware,
-                                software and technology.
-                            </p>
-
-                            <div class="quiz-meta">
-
-                                <span>
-                                    📝 100 Questions
-                                </span>
-
-                                <span>
-                                    ⏱️ 60 Minutes
-                                </span>
-
-                            </div>
-
-                        </div>
-
-                        <div class="quiz-arrow">
-                            →
-                        </div>
-
-                    </article>
-
-
-                    <!-- Web Development -->
-
-                    <article
-                        class="quiz-card"
-                        data-quiz="web-development"
-                        onclick="selectQuiz('web-development')">
-
-                        <div class="quiz-card-icon web">
-                            🌐
-                        </div>
-
-                        <div class="quiz-card-content">
-
-                            <h3>
-                                Web Development
-                            </h3>
-
-                            <p>
-                                HTML, CSS, web technologies
-                                and frontend development.
-                            </p>
-
-                            <div class="quiz-meta">
-
-                                <span>
-                                    📝 100 Questions
-                                </span>
-
-                                <span>
-                                    ⏱️ 60 Minutes
-                                </span>
-
-                            </div>
-
-                        </div>
-
-                        <div class="quiz-arrow">
-                            →
-                        </div>
-
-                    </article>
-
-
-                    <!-- JavaScript -->
-
-                    <article
-                        class="quiz-card"
-                        data-quiz="javascript"
-                        onclick="selectQuiz('javascript')">
-
-                        <div class="quiz-card-icon javascript">
-                            JS
-                        </div>
-
-                        <div class="quiz-card-content">
-
-                            <h3>
-                                JavaScript
-                            </h3>
-
-                            <p>
-                                JavaScript programming,
-                                DOM, functions and modern JS.
-                            </p>
-
-                            <div class="quiz-meta">
-
-                                <span>
-                                    📝 100 Questions
-                                </span>
-
-                                <span>
-                                    ⏱️ 60 Minutes
-                                </span>
-
-                            </div>
-
-                        </div>
-
-                        <div class="quiz-arrow">
-                            →
-                        </div>
-
-                    </article>
-
-
-                    <!-- Python -->
-
-                    <article
-                        class="quiz-card"
-                        data-quiz="python"
-                        onclick="selectQuiz('python')">
-
-                        <div class="quiz-card-icon python">
-                            🐍
-                        </div>
-
-                        <div class="quiz-card-content">
-
-                            <h3>
-                                Python
-                            </h3>
-
-                            <p>
-                                Python programming, syntax,
-                                functions, OOP and libraries.
-                            </p>
-
-                            <div class="quiz-meta">
-
-                                <span>
-                                    📝 100 Questions
-                                </span>
-
-                                <span>
-                                    ⏱️ 60 Minutes
-                                </span>
-
-                            </div>
-
-                        </div>
-
-                        <div class="quiz-arrow">
-                            →
-                        </div>
-
-                    </article>
-
-
-                    <!-- Java -->
-
-                    <article
-                        class="quiz-card"
-                        data-quiz="java"
-                        onclick="selectQuiz('java')">
-
-                        <div class="quiz-card-icon java">
-                            ☕
-                        </div>
-
-                        <div class="quiz-card-content">
-
-                            <h3>
-                                Java Programming
-                            </h3>
-
-                            <p>
-                                Java syntax, OOP, classes,
-                                inheritance and exception handling.
-                            </p>
-
-                            <div class="quiz-meta">
-
-                                <span>
-                                    📝 100 Questions
-                                </span>
-
-                                <span>
-                                    ⏱️ 60 Minutes
-                                </span>
-
-                            </div>
-
-                        </div>
-
-                        <div class="quiz-arrow">
-                            →
-                        </div>
-
-                    </article>
-
-
-                    <!-- Operating System -->
-
-                    <article
-                        class="quiz-card"
-                        data-quiz="operating-system"
-                        onclick="selectQuiz('operating-system')">
-
-                        <div class="quiz-card-icon os">
-                            🖥️
-                        </div>
-
-                        <div class="quiz-card-content">
-
-                            <h3>
-                                Operating System
-                            </h3>
-
-                            <p>
-                                Processes, memory management,
-                                scheduling and operating systems.
-                            </p>
-
-                            <div class="quiz-meta">
-
-                                <span>
-                                    📝 100 Questions
-                                </span>
-
-                                <span>
-                                    ⏱️ 60 Minutes
-                                </span>
-
-                            </div>
-
-                        </div>
-
-                        <div class="quiz-arrow">
-                            →
-                        </div>
-
-                    </article>
-
-
-                    <!-- DBMS -->
-
-                    <article
-                        class="quiz-card"
-                        data-quiz="dbms"
-                        onclick="selectQuiz('dbms')">
-
-                        <div class="quiz-card-icon dbms">
-                            🗄️
-                        </div>
-
-                        <div class="quiz-card-content">
-
-                            <h3>
-                                DBMS
-                            </h3>
-
-                            <p>
-                                SQL, database concepts,
-                                normalization and transactions.
-                            </p>
-
-                            <div class="quiz-meta">
-
-                                <span>
-                                    📝 100 Questions
-                                </span>
-
-                                <span>
-                                    ⏱️ 60 Minutes
-                                </span>
-
-                            </div>
-
-                        </div>
-
-                        <div class="quiz-arrow">
-                            →
-                        </div>
-
-                    </article>
-
-
-                    <!-- DSA -->
-
-                    <article
-                        class="quiz-card"
-                        data-quiz="dsa"
-                        onclick="selectQuiz('dsa')">
-
-                        <div class="quiz-card-icon dsa">
-                            🧠
-                        </div>
-
-                        <div class="quiz-card-content">
-
-                            <h3>
-                                Data Structures & DSA
-                            </h3>
-
-                            <p>
-                                Arrays, linked lists, stacks,
-                                queues, trees and algorithms.
-                            </p>
-
-                            <div class="quiz-meta">
-
-                                <span>
-                                    📝 100 Questions
-                                </span>
-
-                                <span>
-                                    ⏱️ 60 Minutes
-                                </span>
-
-                            </div>
-
-                        </div>
-
-                        <div class="quiz-arrow">
-                            →
-                        </div>
-
-                    </article>
-
-
-                    <!-- Computer Networks -->
-
-                    <article
-                        class="quiz-card"
-                        data-quiz="computer-networks"
-                        onclick="selectQuiz('computer-networks')">
-
-                        <div class="quiz-card-icon network">
-                            🌐
-                        </div>
-
-                        <div class="quiz-card-content">
-
-                            <h3>
-                                Computer Networks
-                            </h3>
-
-                            <p>
-                                Networking, TCP/IP, OSI model,
-                                protocols and network security.
-                            </p>
-
-                            <div class="quiz-meta">
-
-                                <span>
-                                    📝 100 Questions
-                                </span>
-
-                                <span>
-                                    ⏱️ 60 Minutes
-                                </span>
-
-                            </div>
-
-                        </div>
-
-                        <div class="quiz-arrow">
-                            →
-                        </div>
-
-                    </article>
-
-
-                    <!-- C Programming -->
-
-                    <article
-                        class="quiz-card"
-                        data-quiz="c-programming"
-                        onclick="selectQuiz('c-programming')">
-
-                        <div class="quiz-card-icon c-language">
-                            C
-                        </div>
-
-                        <div class="quiz-card-content">
-
-                            <h3>
-                                C Programming
-                            </h3>
-
-                            <p>
-                                C language, pointers, arrays,
-                                functions and structures.
-                            </p>
-
-                            <div class="quiz-meta">
-
-                                <span>
-                                    📝 100 Questions
-                                </span>
-
-                                <span>
-                                    ⏱️ 60 Minutes
-                                </span>
-
-                            </div>
-
-                        </div>
-
-                        <div class="quiz-arrow">
-                            →
-                        </div>
-
-                    </article>
-
-                </div>
-
-
-                <!-- No Search Result -->
-
-                <div
-                    id="noQuizFound"
-                    class="no-result hidden">
-
-                    <div>
-                        🔍
-                    </div>
-
-                    <h3>
-                        No examination found
-                    </h3>
-
-                    <p>
-                        Try another search term.
-                    </p>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- =================================================
-             EXAMINATION PAGE
-        ================================================== -->
-
-        <section
-            id="examPage"
-            class="page">
-
-            <div class="exam-container">
-
-
-                <!-- Exam Header -->
-
-                <div class="exam-header glass-card">
-
-
-                    <div class="exam-title">
-
-                        <div class="exam-subject-icon"
-                            id="examSubjectIcon">
-
-                            📝
-
-                        </div>
-
-                        <div>
-
-                            <h2 id="examTitle">
-                                Examination
-                            </h2>
-
-                            <p>
-                                Question
-                                <strong id="currentQuestionNumber">
-                                    1
-                                </strong>
-                                of
-                                <strong>
-                                    100
-                                </strong>
-                            </p>
-
-                        </div>
-
-                    </div>
-
-
-                    <!-- Timer -->
-
-                    <div
-                        class="exam-timer"
-                        id="examTimer">
-
-                        <span class="timer-icon">
-                            ⏱️
-                        </span>
-
-                        <div>
-
-                            <small>
-                                Time Remaining
-                            </small>
-
-                            <strong id="timerDisplay">
-                                60:00
-                            </strong>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <!-- Exam Progress -->
-
-                <div class="exam-progress-container">
-
-                    <div class="progress-info">
-
-                        <span>
-                            Exam Progress
-                        </span>
-
-                        <strong id="examProgressText">
-                            0%
-                        </strong>
-
-                    </div>
-
-                    <div class="progress-bar">
-
-                        <div
-                            class="progress-fill"
-                            id="examProgressFill">
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <!-- Exam Layout -->
-
-                <div class="exam-layout">
-
-
-                    <!-- Question Area -->
-
-                    <div class="question-area">
-
-
-                        <div class="question-card glass-card">
-
-
-                            <div class="question-top">
-
-                                <span
-                                    class="question-number-badge"
-                                    id="questionBadge">
-
-                                    Question 1
-
-                                </span>
-
-
-                                <button
-                                    class="review-button"
-                                    id="reviewButton"
-                                    onclick="toggleReview()">
-
-                                    ☆ Mark for Review
-
-                                </button>
-
-                            </div>
-
-
-                            <div
-                                class="question-text"
-                                id="questionText">
-
-                                Loading question...
-
-                            </div>
-
-
-                            <!-- Options -->
-
-                            <div
-                                class="options-container"
-                                id="optionsContainer">
-
-                            </div>
-
-
-                            <!-- Question Navigation -->
-
-                            <div class="question-navigation">
-
-                                <button
-                                    class="secondary-button"
-                                    id="previousButton"
-                                    onclick="previousQuestion()">
-
-                                    ← Previous
-
-                                </button>
-
-
-                                <button
-                                    class="primary-button"
-                                    id="nextButton"
-                                    onclick="nextQuestion()">
-
-                                    Next →
-
-                                </button>
-
-                            </div>
-
-                        </div>
-
-
-                        <!-- Exam Information -->
-
-                        <div class="exam-notice">
-
-                            <span>
-                                💡
-                            </span>
-
-                            <p>
-                                Select one answer for each question.
-                                You can use the question palette to
-                                jump between questions.
-                            </p>
-
-                        </div>
-
-                    </div>
-
-
-                    <!-- Question Palette -->
-
-                    <aside class="question-sidebar glass-card">
-
-
-                        <div class="sidebar-header">
-
-                            <div>
-
-                                <h3>
-                                    Question Palette
-                                </h3>
-
-                                <p>
-                                    Navigate questions
-                                </p>
-
-                            </div>
-
-                            <span id="answeredCount">
-                                0/100
-                            </span>
-
-                        </div>
-
-
-                        <!-- Legend -->
-
-                        <div class="palette-legend">
-
-                            <div>
-                                <span class="legend-dot current">
-                                </span>
-
-                                Current
-                            </div>
-
-                            <div>
-                                <span class="legend-dot answered">
-                                </span>
-
-                                Answered
-                            </div>
-
-                            <div>
-                                <span class="legend-dot unanswered">
-                                </span>
-
-                                Unanswered
-                            </div>
-
-                            <div>
-                                <span class="legend-dot review">
-                                </span>
-
-                                Review
-                            </div>
-
-                        </div>
-
-
-                        <!-- Palette -->
-
-                        <div
-                            class="question-palette"
-                            id="questionPalette">
-
-                        </div>
-
-
-                        <!-- Submit -->
-
-                        <button
-                            class="submit-exam-button"
-                            onclick="submitExam()">
-
-                            ✓ Submit Examination
-
-                        </button>
-
-                    </aside>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- =================================================
-             RESULT PAGE
-        ================================================== -->
-
-        <section
-            id="resultPage"
-            class="page">
-
-            <div class="result-container">
-
-
-                <div class="result-header">
-
-                    <div class="success-icon">
-                        ✓
-                    </div>
-
-                    <div>
-
-                        <div class="page-badge">
-                            Examination Completed
-                        </div>
-
-                        <h1>
-                            Your Result
-                        </h1>
-
-                        <p id="resultExamName">
-                            Examination
-                        </p>
-
-                    </div>
-
-                </div>
-
-
-                <!-- Score Card -->
-
-                <div class="result-main-card glass-card">
-
-
-                    <div class="score-circle">
-
-                        <div class="score-inner">
-
-                            <strong id="resultScore">
-                                0
-                            </strong>
-
-                            <span>
-                                / 100
-                            </span>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="result-summary">
-
-                        <h2 id="resultMessage">
-                            Examination Completed
-                        </h2>
-
-                        <p>
-                            You scored
-                            <strong id="resultPercentage">
-                                0%
-                            </strong>
-                        </p>
-
-
-                        <div class="grade-display">
-
-                            Grade:
-                            <strong id="resultGrade">
-                                -
-                            </strong>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <!-- Result Statistics -->
-
-                <div class="result-stats">
-
-
-                    <div class="result-stat correct">
-
-                        <span>
-                            ✓
-                        </span>
-
-                        <div>
-
-                            <small>
-                                Correct
-                            </small>
-
-                            <strong id="correctAnswers">
-                                0
-                            </strong>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="result-stat wrong">
-
-                        <span>
-                            ✕
-                        </span>
-
-                        <div>
-
-                            <small>
-                                Wrong
-                            </small>
-
-                            <strong id="wrongAnswers">
-                                0
-                            </strong>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="result-stat unanswered">
-
-                        <span>
-                            —
-                        </span>
-
-                        <div>
-
-                            <small>
-                                Unanswered
-                            </small>
-
-                            <strong id="unansweredQuestions">
-                                0
-                            </strong>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="result-stat time">
-
-                        <span>
-                            ⏱️
-                        </span>
-
-                        <div>
-
-                            <small>
-                                Time Used
-                            </small>
-
-                            <strong id="timeUsed">
-                                00:00
-                            </strong>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <!-- Result Actions -->
-
-                <div class="result-actions">
-
-                    <button
-                        class="secondary-button"
-                        onclick="backToDashboard()">
-
-                        ← Back to Dashboard
-
-                    </button>
-
-                    <button
-                        class="primary-button"
-                        onclick="openCertificate()">
-
-                        🏆 View Certificate
-
-                    </button>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- =================================================
-             CERTIFICATE PAGE
-        ================================================== -->
-
-        <section
-            id="certificatePage"
-            class="page">
-
-            <div class="certificate-container">
-
-
-                <div class="certificate-toolbar">
-
-                    <button
-                        class="secondary-button"
-                        onclick="backToResult()">
-
-                        ← Back to Result
-
-                    </button>
-
-                    <button
-                        class="primary-button"
-                        onclick="printCertificate()">
-
-                        🖨️ Print Certificate
-
-                    </button>
-
-                </div>
-
-
-                <!-- Certificate -->
-
-                <div
-                    class="certificate"
-                    id="certificate">
-
-
-                    <div class="certificate-border">
-
-
-                        <div class="certificate-header">
-
-                            <div class="certificate-logo">
-                                EP
-                            </div>
-
-                            <h1>
-                                CERTIFICATE
-                            </h1>
-
-                            <h2>
-                                OF ACHIEVEMENT
-                            </h2>
-
-                            <div class="certificate-line"></div>
-
-                        </div>
-
-
-                        <div class="certificate-body">
-
-                            <p class="certificate-label">
-                                This certificate is proudly presented to
-                            </p>
-
-                            <h2
-                                class="certificate-name"
-                                id="certificateName">
-
-                                Student Name
-
-                            </h2>
-
-
-                            <p>
-                                for successfully completing the
-                            </p>
-
-                            <h3
-                                id="certificateExamName">
-
-                                Online Examination
-
-                            </h3>
-
-
-                            <div class="certificate-result">
-
-                                <div>
-
-                                    <span>
-                                        Score
-                                    </span>
-
-                                    <strong id="certificateScore">
-                                        0 / 100
-                                    </strong>
-
-                                </div>
-
-
-                                <div>
-
-                                    <span>
-                                        Percentage
-                                    </span>
-
-                                    <strong id="certificatePercentage">
-                                        0%
-                                    </strong>
-
-                                </div>
-
-
-                                <div>
-
-                                    <span>
-                                        Grade
-                                    </span>
-
-                                    <strong id="certificateGrade">
-                                        -
-                                    </strong>
-
-                                </div>
-
-                            </div>
-
-
-                            <p class="certificate-description">
-
-                                This certificate recognizes the successful
-                                completion of the examination and demonstrates
-                                knowledge of the selected subject.
-
-                            </p>
-
-                        </div>
-
-
-                        <div class="certificate-footer">
-
-
-                            <div class="certificate-signature">
-
-                                <div class="signature-line">
-                                </div>
-
-                                <strong>
-                                    Examination Authority
-                                </strong>
-
-                                <span>
-                                    ExamPro Online Portal
-                                </span>
-
-                            </div>
-
-
-                            <div class="certificate-id">
-
-                                <div
-                                    class="qr-placeholder"
-                                    id="certificateQR">
-
-                                    QR
-
-                                </div>
-
-                                <small>
-                                    Certificate ID
-                                </small>
-
-                                <strong
-                                    id="certificateId">
-                                    EXAM-000000
-                                </strong>
-
-                            </div>
-
-
-                            <div class="certificate-date">
-
-                                <div class="signature-line">
-                                </div>
-
-                                <strong>
-                                    Date of Issue
-                                </strong>
-
-                                <span
-                                    id="certificateDate">
-                                    --
-                                </span>
-
-                            </div>
-
-                        </div>
-
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </section>
-
-    </main>
-
-
-    <!-- =====================================================
-         FORGOT PASSWORD MODAL
-    ====================================================== -->
-
-    <div
-        class="modal-overlay hidden"
-        id="forgotPasswordModal">
-
-        <div class="modal-card glass-card">
-
-            <button
-                class="modal-close"
-                onclick="closeForgotPassword()">
-
-                ×
-
-            </button>
-
-            <div class="modal-icon">
-                🔑
-            </div>
-
-            <h2>
-                Forgot Password?
-            </h2>
-
+  </header>
+
+  <!-- Login Main Content -->
+  <main class="auth-page">
+    <div class="auth-container">
+      
+      <!-- Left Intro / Hero Panel -->
+      <section class="auth-intro">
+        <div>
+          <div class="intro-badge">
+            🎓 Academic Examination Portal
+          </div>
+          
+          <div class="intro-hero">
+            <h1>Assess Your <span>Mastery</span> with ExamPro</h1>
             <p>
-                Please contact the examination administrator
-                to reset your password.
+              Standardized computer-based assessments across 12 computer science and engineering disciplines. Verified credentials and digital certification upon completion.
             </p>
+          </div>
 
-            <button
-                class="primary-button"
-                onclick="closeForgotPassword()">
+          <div class="features-list">
+            <div class="feature-box">
+              <div class="feature-icon-wrap">⏱️</div>
+              <div>
+                <div class="feature-title">Timed Examinations</div>
+                <div class="feature-desc">Standard 60-minute duration with real-time countdown and warning indicators.</div>
+              </div>
+            </div>
 
-                Got it
+            <div class="feature-box">
+              <div class="feature-icon-wrap">🗂️</div>
+              <div>
+                <div class="feature-title">Interactive Horizontal Palette</div>
+                <div class="feature-desc">Full-width question navigation with instant status feedback and review flags.</div>
+              </div>
+            </div>
 
+            <div class="feature-box">
+              <div class="feature-icon-wrap">🏆</div>
+              <div>
+                <div class="feature-title">Verified Digital Certificates</div>
+                <div class="feature-desc">Earn printable certificates of excellence with tamper-evident verification seals.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 24px;">
+          © 2026 ExamPro Portal. All rights reserved.
+        </div>
+      </section>
+
+      <!-- Right Login Form Panel -->
+      <section class="auth-form-card">
+        <div class="form-header">
+          <h2>Student Sign In</h2>
+          <p>Enter your examination credentials to begin</p>
+        </div>
+
+        <form id="loginForm" class="auth-form">
+          <div class="form-group">
+            <label for="username" class="form-label">
+              <span>Username / Roll Number</span>
+            </label>
+            <div class="input-container">
+              <span class="input-icon">👤</span>
+              <input 
+                type="text" 
+                id="username" 
+                class="form-input" 
+                placeholder="e.g. student" 
+                autocomplete="username" 
+                required
+              >
+            </div>
+            <div id="usernameError" class="form-error"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="password" class="form-label">
+              <span>Password</span>
+            </label>
+            <div class="input-container">
+              <span class="input-icon">🔒</span>
+              <input 
+                type="password" 
+                id="password" 
+                class="form-input" 
+                placeholder="Enter password" 
+                autocomplete="current-password" 
+                required
+              >
+              <button type="button" class="btn-toggle-pwd" id="btnTogglePassword" title="Toggle visibility">👁️</button>
+            </div>
+            <div id="passwordError" class="form-error"></div>
+          </div>
+
+          <div class="form-options">
+            <label class="checkbox-label">
+              <input type="checkbox" id="rememberMe" checked>
+              <span>Keep me signed in</span>
+            </label>
+            <a href="javascript:void(0)" id="btnForgotPwd" style="font-size: 0.85rem;">Forgot Password?</a>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-lg" id="btnSubmitLogin" style="width: 100%;">
+            <span>Sign In to Examination Portal</span> →
+          </button>
+        </form>
+
+        <!-- Demo Accounts Helper -->
+        <div class="demo-accounts-card">
+          <div class="demo-title">
+            <span>Quick Demo Accounts</span>
+            <span style="font-weight: normal; font-size: 0.7rem; color: var(--text-muted);">Click to Autofill</span>
+          </div>
+          <div class="demo-badges">
+            <button type="button" class="demo-badge-btn" id="demoUser1">
+              <span>👤</span> student / 123456
             </button>
-
+            <button type="button" class="demo-badge-btn" id="demoUser2">
+              <span>👤</span> santanu / 123456
+            </button>
+          </div>
         </div>
 
-    </div>
-
-
-    <!-- =====================================================
-         SUBMIT CONFIRMATION MODAL
-    ====================================================== -->
-
-    <div
-        class="modal-overlay hidden"
-        id="submitModal">
-
-        <div class="modal-card glass-card">
-
-            <div class="modal-icon warning">
-                ⚠️
-            </div>
-
-            <h2>
-                Submit Examination?
-            </h2>
-
-            <p id="submitModalText">
-                Are you sure you want to submit your examination?
-            </p>
-
-
-            <div class="modal-actions">
-
-                <button
-                    class="secondary-button"
-                    onclick="closeSubmitModal()">
-
-                    Continue Exam
-
-                </button>
-
-                <button
-                    class="danger-button"
-                    onclick="confirmSubmitExam()">
-
-                    Submit Exam
-
-                </button>
-
-            </div>
-
-        </div>
+      </section>
 
     </div>
+  </main>
 
-
-    <!-- =====================================================
-         TOAST NOTIFICATION
-    ====================================================== -->
-
-    <div
-        class="toast"
-        id="toast">
-
-        <span id="toastIcon">
-            ✓
-        </span>
-
-        <span id="toastMessage">
-            Success
-        </span>
-
+  <!-- Forgot Password Modal -->
+  <div class="modal-overlay" id="forgotModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">Reset Examination Password</h3>
+        <button type="button" class="modal-close-btn" id="btnCloseForgot">×</button>
+      </div>
+      <p style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 20px;">
+        For academic integrity, password resets require student ID verification. Please contact the Examination Administrator or academic office at <code>admin@exampro.edu</code>.
+      </p>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-primary" id="btnAckForgot">Understood</button>
+      </div>
     </div>
+  </div>
 
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
 
-    <!-- =====================================================
-         JAVASCRIPT
-    ====================================================== -->
+  <!-- Scripts -->
+  <script src="js/theme.js"></script>
+  <script src="js/db.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    // Login Page Interactivity
+    const loginForm = document.getElementById("loginForm");
+    const usernameInput = document.getElementById("username");
+    const passwordInput = document.getElementById("password");
+    const usernameError = document.getElementById("usernameError");
+    const passwordError = document.getElementById("passwordError");
+    const btnTogglePassword = document.getElementById("btnTogglePassword");
+    const forgotModal = document.getElementById("forgotModal");
 
-<script src="questions/mathematics.js"></script>
-<script src="questions/javascript.js"></script>
-<script src="questions/python.js"></script>
-<script src="questions/java.js"></script>
-<script src="questions/operating-system.js"></script>
-<script src="questions/dbms.js"></script>
-<script src="questions/dsa.js"></script>
-<script src="questions/computer-networks.js"></script>
-<script src="questions/c-programming.js"></script>
-<script src="questions/web-development.js"></script>
-<script src="questions/computer-fundamentals.js"></script>
-<script src="questions/software-engineering.js"></script>
-<script src="script.js"></script>
+    // Toggle Password Visibility
+    btnTogglePassword.addEventListener("click", () => {
+      const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
+      passwordInput.setAttribute("type", type);
+      btnTogglePassword.textContent = type === "password" ? "👁️" : "🙈";
+    });
 
+    // Demo Autofills
+    document.getElementById("demoUser1").addEventListener("click", () => {
+      usernameInput.value = "student";
+      passwordInput.value = "123456";
+      usernameError.textContent = "";
+      passwordError.textContent = "";
+    });
+
+    document.getElementById("demoUser2").addEventListener("click", () => {
+      usernameInput.value = "santanu";
+      passwordInput.value = "123456";
+      usernameError.textContent = "";
+      passwordError.textContent = "";
+    });
+
+    // Forgot Password Modal
+    document.getElementById("btnForgotPwd").addEventListener("click", () => {
+      forgotModal.classList.add("active");
+    });
+    document.getElementById("btnCloseForgot").addEventListener("click", () => {
+      forgotModal.classList.remove("active");
+    });
+    document.getElementById("btnAckForgot").addEventListener("click", () => {
+      forgotModal.classList.remove("active");
+    });
+
+    // Requirement 7: Form submission saves user data to localStorage
+    loginForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      usernameError.textContent = "";
+      passwordError.textContent = "";
+
+      const u = usernameInput.value.trim();
+      const p = passwordInput.value.trim();
+
+      const res = ExamAuth.login(u, p);
+      if (res.success) {
+        // Redirect to dashboard
+        window.location.href = "dashboard.html";
+      } else {
+        passwordError.textContent = res.message;
+      }
+    });
+  </script>
 </body>
-
 </html>

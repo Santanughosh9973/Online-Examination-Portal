@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Computer Networks Examination - ExamPro</title>
+  <link rel="icon" type="image/svg+xml" href="../assets/logo.svg">
+  <link rel="stylesheet" href="../css/main.css">
+  <link rel="stylesheet" href="../css/exam.css">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <header class="navbar">
+    <a href="../dashboard.html" class="nav-brand">
+      <div class="nav-logo-icon">
+        <img src="../assets/logo.svg" alt="ExamPro">
+      </div>
+      <div>
+        <div class="nav-brand-title">Exam<span>Pro</span></div>
+        <div class="nav-brand-sub">Examination System</div>
+      </div>
+    </a>
+
+    <ul class="nav-links">
+      <li><a href="../dashboard.html" class="nav-link"><span>📊</span> Dashboard</a></li>
+      <li><a href="../attempts.html" class="nav-link"><span>📜</span> My Attempts</a></li>
+      <li><a href="../certificates.html" class="nav-link"><span>🏆</span> Certificates</a></li>
+    </ul>
+
+    <div class="nav-actions">
+      <div class="user-profile-chip">
+        <div class="user-avatar">ST</div>
+        <span class="user-name-display">Student</span>
+      </div>
+      <button type="button" class="btn-theme-toggle" title="Toggle Theme">🌙</button>
+      <button type="button" class="btn-logout" id="btnLogoutNav">Logout</button>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="exam-wrapper">
+      
+      <!-- ==============================================
+           ACTIVE EXAMINATION VIEW
+      =============================================== -->
+      <section id="examActiveView" class="exam-active-section">
+        
+        <!-- Exam Header Bar -->
+        <div class="exam-header-bar">
+          <div class="exam-subject-info">
+            <div class="exam-subject-icon">📡</div>
+            <div>
+              <h2 class="exam-subject-title">Computer Networks</h2>
+              <div class="exam-subject-meta">Standard Examination • 100 Questions • 60 Minutes</div>
+            </div>
+          </div>
+
+          <div class="exam-header-actions">
+            <div class="exam-timer-badge" id="examTimerBadge">
+              <span class="timer-icon">⏱️</span>
+              <span id="examTimerDisplay">60:00</span>
+            </div>
+            <button type="button" class="btn btn-danger" id="btnSubmitExamHeader">
+              ✓ Submit Exam
+            </button>
+          </div>
+        </div>
+
+        <!-- Overall Progress Bar -->
+        <div class="exam-progress-container mt-2">
+          <div class="exam-progress-bar" id="examProgressBar"></div>
+        </div>
+
+        <!-- ==============================================
+             REQUIREMENT 2: QUESTION NUMBERS PALETTE 
+             PLACED HORIZONTALLY ABOVE QUESTION DIV (FULL WIDTH)
+        =============================================== -->
+        <div class="palette-full-width-container mt-4">
+          <div class="palette-top-bar">
+            <div class="palette-heading">
+              <span>📋</span> Question Navigation Palette
+            </div>
+
+            <div class="palette-legend">
+              <div class="legend-item">
+                <span class="legend-dot current"></span> Current
+              </div>
+              <div class="legend-item">
+                <span class="legend-dot answered"></span> Answered
+              </div>
+              <div class="legend-item">
+                <span class="legend-dot review"></span> Marked Review
+              </div>
+              <div class="legend-item">
+                <span class="legend-dot unanswered"></span> Unanswered
+              </div>
+            </div>
+
+            <div class="palette-stats-summary">
+              <span>Answered: <strong id="paletteAnsweredCount" style="color:var(--success);">0</strong>/100</span>
+              <span>•</span>
+              <span>Review: <strong id="paletteReviewCount" style="color:var(--warning);">0</strong></span>
+              <span>•</span>
+              <span>Remaining: <strong id="paletteUnansweredCount" style="color:var(--text-muted);">100</strong></span>
+            </div>
+          </div>
+
+          <!-- Numbers Strip (Full Width) -->
+          <div class="question-numbers-strip" id="questionNumbersStrip">
+            <!-- 1 to 100 buttons rendered by ExamEngine -->
+          </div>
+        </div>
+
+        <!-- ==============================================
+             REQUIREMENT 2: QUESTION DIV DIRECTLY BELOW 
+             HORIZONTAL PALETTE (FULL WIDTH)
+        =============================================== -->
+        <div class="question-full-width-card mt-4">
+          <div class="question-card-top">
+            <div class="q-badge-info">
+              <span class="q-number-pill" id="currentQuestionPill">Question 1 of 100</span>
+              <span class="badge badge-info">+1 Mark</span>
+            </div>
+            <div class="q-badge-info">
+              <span class="badge badge-primary">Computer Networks</span>
+            </div>
+          </div>
+
+          <!-- Question Title -->
+          <div class="question-text-box">
+            <h3 class="question-title" id="currentQuestionTitle">
+              Loading examination question...
+            </h3>
+          </div>
+
+          <!-- Options List (Full Width) -->
+          <div class="options-list" id="optionsContainer">
+            <!-- Rendered by ExamEngine -->
+          </div>
+
+          <!-- Controls Bar -->
+          <div class="question-controls-bar">
+            <div class="control-left-actions">
+              <button type="button" class="btn btn-secondary" id="btnPrevQuestion">
+                ← Previous
+              </button>
+              <button type="button" class="btn btn-outline" id="btnClearResponse">
+                Clear Selection
+              </button>
+              <button type="button" class="btn btn-outline" id="btnMarkReview">
+                ☆ Mark for Review
+              </button>
+            </div>
+
+            <div class="control-right-actions">
+              <button type="button" class="btn btn-primary" id="btnNextQuestion">
+                Next Question →
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ==============================================
+           EXAMINATION RESULT VIEW (SHOWN AFTER SUBMISSION)
+      =============================================== -->
+      <section id="examResultView" class="result-card-container hidden">
+        <div class="result-banner">
+          <div class="result-status-icon" id="resStatusIcon">🏆</div>
+          <h2 class="result-headline" id="resHeadline">Examination Completed</h2>
+          <p id="resSubline" style="color: var(--text-secondary); max-width: 600px; font-size: 1.05rem;"></p>
+          
+          <div class="result-score-circle-wrap">
+            <span class="result-score-val" id="resScoreVal">0</span>
+            <span class="result-score-total" id="resScoreTotal">/ 100</span>
+          </div>
+        </div>
+
+        <!-- Metrics Grid -->
+        <div class="result-metrics-grid">
+          <div class="result-metric-card">
+            <div class="metric-val" id="resMetricPercentage" style="color:var(--primary);">0%</div>
+            <div class="metric-lbl">Score Percentage</div>
+          </div>
+          <div class="result-metric-card">
+            <div class="metric-val" id="resMetricGrade" style="color:var(--accent);">--</div>
+            <div class="metric-lbl">Academic Grade</div>
+          </div>
+          <div class="result-metric-card">
+            <div class="metric-val" id="resMetricCorrect" style="color:var(--success);">0</div>
+            <div class="metric-lbl">Correct Answers</div>
+          </div>
+          <div class="result-metric-card">
+            <div class="metric-val" id="resMetricWrong" style="color:var(--danger);">0</div>
+            <div class="metric-lbl">Wrong Answers</div>
+          </div>
+          <div class="result-metric-card">
+            <div class="metric-val" id="resMetricUnanswered" style="color:var(--text-muted);">0</div>
+            <div class="metric-lbl">Unanswered</div>
+          </div>
+          <div class="result-metric-card">
+            <div class="metric-val" id="resMetricTime" style="color:var(--info);">0m 0s</div>
+            <div class="metric-lbl">Time Spent</div>
+          </div>
+        </div>
+
+        <!-- Result Action Controls -->
+        <div class="result-actions-row">
+          <button type="button" class="btn btn-primary btn-lg hidden" id="btnViewCertificateResult">
+            <span>🏆</span> View Verified Certificate
+          </button>
+          <button type="button" class="btn btn-secondary btn-lg" id="btnRetakeQuizResult">
+            <span>🔄</span> Retake Examination
+          </button>
+          <a href="../attempts.html" class="btn btn-outline btn-lg">
+            <span>📜</span> View All Attempts
+          </a>
+          <a href="../dashboard.html" class="btn btn-outline btn-lg">
+            <span>🏠</span> Back to Dashboard
+          </a>
+        </div>
+
+        <!-- Toggle Review Button -->
+        <div class="text-center mt-2">
+          <button type="button" class="btn btn-secondary btn-sm" id="btnToggleReviewAnswers">
+            📋 Review All Questions & Answers
+          </button>
+        </div>
+
+        <!-- Answer Breakdown List -->
+        <div id="reviewQuestionsSection" class="review-questions-section hidden">
+          <h3 style="margin-bottom: 16px;">Question Breakdown</h3>
+          <div id="reviewQuestionsList"></div>
+        </div>
+
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Submit Confirmation Modal -->
+  <div class="modal-overlay" id="submitConfirmModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">Submit Examination?</h3>
+        <button type="button" class="modal-close-btn" id="btnCancelSubmitModal">×</button>
+      </div>
+      
+      <p style="color:var(--text-secondary); font-size:0.95rem;">
+        Are you sure you want to finalize and submit your examination? Once submitted, your score will be computed and recorded into IndexedDB.
+      </p>
+
+      <div id="submitModalSummary"></div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" onclick="document.getElementById('submitConfirmModal').classList.remove('active')">
+          Continue Exam
+        </button>
+        <button type="button" class="btn btn-danger" id="btnConfirmFinalSubmit">
+          Confirm & Submit
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <p>ExamPro Online Examination Portal • Multi-Subject Standardized Testing Engine</p>
+  </footer>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Scripts -->
+  <script src="../js/theme.js"></script>
+  <script src="../js/db.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/topics-data.js"></script>
+  <script src="../questions/computer-networks.js"></script>
+  <script src="../js/exam-engine.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // Logout handler
+      document.getElementById("btnLogoutNav").addEventListener("click", () => {
+        ExamAuth.logout();
+      });
+
+      // Initialize Exam
+      window.currentExam = new ExamEngine("computer-networks");
+    });
+  </script>
+</body>
+</html>

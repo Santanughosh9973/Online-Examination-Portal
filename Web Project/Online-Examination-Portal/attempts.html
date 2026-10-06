@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>All Attempts - ExamPro Portal</title>
+  <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/attempts.css">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <header class="navbar">
+    <a href="dashboard.html" class="nav-brand">
+      <div class="nav-logo-icon">
+        <img src="assets/logo.svg" alt="ExamPro">
+      </div>
+      <div>
+        <div class="nav-brand-title">Exam<span>Pro</span></div>
+        <div class="nav-brand-sub">Examination System</div>
+      </div>
+    </a>
+
+    <ul class="nav-links">
+      <li><a href="dashboard.html" class="nav-link"><span>📊</span> Dashboard</a></li>
+      <li><a href="attempts.html" class="nav-link active"><span>📜</span> My Attempts</a></li>
+      <li><a href="certificates.html" class="nav-link"><span>🏆</span> Certificates</a></li>
+    </ul>
+
+    <div class="nav-actions">
+      <div class="user-profile-chip">
+        <div class="user-avatar">ST</div>
+        <span class="user-name-display">Student</span>
+      </div>
+      <button type="button" class="btn-theme-toggle" title="Toggle Theme">🌙</button>
+      <button type="button" class="btn-logout" id="btnLogoutNav">Logout</button>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="attempts-page-container">
+      
+      <!-- Section Header -->
+      <div class="section-header">
+        <div>
+          <h1 class="section-title">Examination Attempts History</h1>
+          <p class="section-subtitle">Track and review all your computer-based examination records stored in IndexedDB</p>
+        </div>
+        <a href="dashboard.html" class="btn btn-secondary btn-sm">
+          <span>←</span> Back to Dashboard
+        </a>
+      </div>
+
+      <!-- Stats Grid -->
+      <div class="attempts-stats-grid">
+        <div class="attempts-stat-card">
+          <div class="stat-card-icon blue">📝</div>
+          <div class="stat-card-info">
+            <h4 id="statTotalAttempts">0</h4>
+            <span>Total Attempts</span>
+          </div>
+        </div>
+
+        <div class="attempts-stat-card">
+          <div class="stat-card-icon green">✅</div>
+          <div class="stat-card-info">
+            <h4 id="statPassedCount">0</h4>
+            <span>Passed Exams</span>
+          </div>
+        </div>
+
+        <div class="attempts-stat-card">
+          <div class="stat-card-icon amber">❌</div>
+          <div class="stat-card-info">
+            <h4 id="statFailedCount">0</h4>
+            <span>Needs Retake</span>
+          </div>
+        </div>
+
+        <div class="attempts-stat-card">
+          <div class="stat-card-icon purple">📈</div>
+          <div class="stat-card-info">
+            <h4 id="statAvgScore">0%</h4>
+            <span>Average Score</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filter Toolbar -->
+      <div class="attempts-toolbar">
+        <div class="attempts-search">
+          <span>🔍</span>
+          <input type="text" id="attemptSearchInput" placeholder="Filter by subject or grade...">
+        </div>
+
+        <div class="attempts-filters-group">
+          <select id="topicFilterSelect" class="filter-select">
+            <option value="all">All Subjects</option>
+          </select>
+
+          <select id="statusFilterSelect" class="filter-select">
+            <option value="all">All Statuses</option>
+            <option value="passed">Passed</option>
+            <option value="failed">Failed</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Attempts Table Card -->
+      <div class="attempts-table-card">
+        <div class="attempts-table-responsive">
+          <table class="attempts-table">
+            <thead>
+              <tr>
+                <th>Subject</th>
+                <th>Attempt #</th>
+                <th>Date & Time</th>
+                <th>Score</th>
+                <th>Percentage</th>
+                <th>Time Spent</th>
+                <th>Status</th>
+                <th style="text-align: right;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="attemptsTableBody">
+              <!-- Dynamically populated from IndexedDB -->
+            </tbody>
+          </table>
+        </div>
+
+        <div id="emptyAttemptsState" class="empty-attempts-state hidden">
+          <div class="empty-icon">📂</div>
+          <h3>No Examination Attempts Found</h3>
+          <p style="color: var(--text-secondary); max-width: 440px;">
+            You have not completed any examinations yet in this session. Start a test from the dashboard to track your academic progress!
+          </p>
+          <a href="dashboard.html" class="btn btn-primary btn-sm mt-4">
+            <span>Explore Subjects</span> →
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Attempt Details / Review Modal -->
+  <div class="modal-overlay" id="attemptDetailsModal">
+    <div class="modal-card modal-card-lg">
+      <div class="modal-header">
+        <div>
+          <h3 class="modal-title" id="modalAttemptTitle">Attempt Details</h3>
+          <p id="modalAttemptSubtitle" style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 2px;"></p>
+        </div>
+        <button type="button" class="modal-close-btn" id="btnCloseDetailsModal">×</button>
+      </div>
+
+      <div id="modalAttemptStats" style="display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap;"></div>
+
+      <div style="max-height: 420px; overflow-y: auto; padding-right: 6px;">
+        <div id="modalQuestionsList" style="display: flex; flex-direction: column; gap: 10px;"></div>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" id="btnCloseDetailsModalBtn">Close Review</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <p>ExamPro Online Examination Portal • Multi-Subject Standardized Testing Engine</p>
+  </footer>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Scripts -->
+  <script src="js/theme.js"></script>
+  <script src="js/db.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/topics-data.js"></script>
+  <script>
+    let allUserAttempts = [];
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      // Logout handler
+      document.getElementById("btnLogoutNav").addEventListener("click", () => {
+        ExamAuth.logout();
+      });
+
+      // Populate topic filter options
+      const topicSelect = document.getElementById("topicFilterSelect");
+      EXAM_TOPICS.forEach(t => {
+        const opt = document.createElement("option");
+        opt.value = t.id;
+        opt.textContent = `${t.icon} ${t.title}`;
+        topicSelect.appendChild(opt);
+      });
+
+      // Load attempts from IndexedDB
+      await loadAttempts();
+
+      // Bind filter controls
+      const searchInput = document.getElementById("attemptSearchInput");
+      const statusSelect = document.getElementById("statusFilterSelect");
+
+      const applyFilters = () => {
+        const query = searchInput.value.trim().toLowerCase();
+        const topicVal = topicSelect.value;
+        const statusVal = statusSelect.value;
+        renderFilteredAttempts(query, topicVal, statusVal);
+      };
+
+      searchInput.addEventListener("input", applyFilters);
+      topicSelect.addEventListener("change", applyFilters);
+      statusSelect.addEventListener("change", applyFilters);
+
+      // Modal close handlers
+      const modal = document.getElementById("attemptDetailsModal");
+      document.getElementById("btnCloseDetailsModal").onclick = () => modal.classList.remove("active");
+      document.getElementById("btnCloseDetailsModalBtn").onclick = () => modal.classList.remove("active");
+    });
+
+    async function loadAttempts() {
+      const user = ExamAuth.getCurrentUser();
+      if (!user) return;
+
+      try {
+        allUserAttempts = await ExamDB.getAllAttempts(user.username);
+        updateStats(allUserAttempts);
+        renderFilteredAttempts("", "all", "all");
+      } catch (err) {
+        console.error("Error loading attempts from IndexedDB:", err);
+      }
+    }
+
+    function updateStats(attempts) {
+      const total = attempts.length;
+      const passed = attempts.filter(a => a.passed).length;
+      const failed = total - passed;
+      const avg = total > 0 ? Math.round(attempts.reduce((s, a) => s + (a.percentage || 0), 0) / total) : 0;
+
+      document.getElementById("statTotalAttempts").textContent = total;
+      document.getElementById("statPassedCount").textContent = passed;
+      document.getElementById("statFailedCount").textContent = failed;
+      document.getElementById("statAvgScore").textContent = `${avg}%`;
+    }
+
+    function renderFilteredAttempts(query, topicId, status) {
+      const tbody = document.getElementById("attemptsTableBody");
+      const emptyState = document.getElementById("emptyAttemptsState");
+      const table = document.querySelector(".attempts-table");
+
+      const filtered = allUserAttempts.filter(item => {
+        const matchesQuery = !query || 
+          (item.quizTitle && item.quizTitle.toLowerCase().includes(query)) ||
+          (item.grade && item.grade.toLowerCase().includes(query));
+        const matchesTopic = topicId === "all" || item.quizId === topicId;
+        const matchesStatus = status === "all" || 
+          (status === "passed" && item.passed) || 
+          (status === "failed" && !item.passed);
+
+        return matchesQuery && matchesTopic && matchesStatus;
+      });
+
+      tbody.innerHTML = "";
+
+      if (filtered.length === 0) {
+        table.classList.add("hidden");
+        emptyState.classList.remove("hidden");
+        return;
+      }
+
+      table.classList.remove("hidden");
+      emptyState.classList.add("hidden");
+
+      filtered.forEach(item => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>
+            <div class="quiz-td-title">
+              <div class="quiz-td-icon">${item.quizIcon || "📝"}</div>
+              <div>
+                <div>${item.quizTitle || "Examination"}</div>
+                <small style="color:var(--text-muted);">ID: ${item.quizId}</small>
+              </div>
+            </div>
+          </td>
+          <td><strong>#${item.attemptNumber || 1}</strong></td>
+          <td style="font-size:0.85rem; color:var(--text-secondary);">${item.dateFormatted || "Recently"}</td>
+          <td><strong>${item.marks} / ${item.totalMarks}</strong></td>
+          <td>
+            <span class="badge ${item.passed ? "badge-success" : "badge-danger"}">
+              ${item.percentage}% (${item.grade})
+            </span>
+          </td>
+          <td style="font-family:var(--font-mono); font-size:0.85rem;">${item.timeSpentFormatted || "N/A"}</td>
+          <td>
+            <span class="badge ${item.passed ? "badge-success" : "badge-danger"}">
+              ${item.passed ? "PASSED" : "FAILED"}
+            </span>
+          </td>
+          <td style="text-align: right;">
+            <div style="display:flex; justify-content:flex-end; gap:8px;">
+              ${item.passed ? `<a href="certificates.html?id=${item.id}" class="btn btn-outline btn-sm" title="View Certificate">🏆 Cert</a>` : ""}
+              <button type="button" class="btn btn-secondary btn-sm btn-review-attempt" data-id="${item.id}">📋 Review</button>
+              <a href="topics/${item.quizId}.html" class="btn btn-primary btn-sm">🔄 Retake</a>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      // Bind Review buttons
+      document.querySelectorAll(".btn-review-attempt").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const id = Number(btn.getAttribute("data-id"));
+          openAttemptReviewModal(id);
+        });
+      });
+    }
+
+    function openAttemptReviewModal(attemptId) {
+      const attempt = allUserAttempts.find(a => a.id === attemptId);
+      if (!attempt) return;
+
+      const modal = document.getElementById("attemptDetailsModal");
+      document.getElementById("modalAttemptTitle").textContent = `${attempt.quizIcon || ""} ${attempt.quizTitle} - Attempt #${attempt.attemptNumber || 1}`;
+      document.getElementById("modalAttemptSubtitle").textContent = `Completed on ${attempt.dateFormatted} • Time: ${attempt.timeSpentFormatted}`;
+
+      // Stats Pills
+      const statsContainer = document.getElementById("modalAttemptStats");
+      statsContainer.innerHTML = `
+        <span class="badge ${attempt.passed ? "badge-success" : "badge-danger"}">Score: ${attempt.marks}/${attempt.totalMarks} (${attempt.percentage}%)</span>
+        <span class="badge badge-info">Grade: ${attempt.grade}</span>
+        <span class="badge badge-success">Correct: ${attempt.correctCount}</span>
+        <span class="badge badge-danger">Wrong: ${attempt.wrongCount}</span>
+        <span class="badge badge-warning">Unanswered: ${attempt.unansweredCount}</span>
+      `;
+
+      // Questions List
+      const qContainer = document.getElementById("modalQuestionsList");
+      qContainer.innerHTML = "";
+
+      if (Array.isArray(attempt.answers)) {
+        attempt.answers.forEach((q, idx) => {
+          const div = document.createElement("div");
+          const isAns = q.selectedOption !== null;
+          const userAnsText = isAns ? q.options[q.selectedOption] : "Not Attempted";
+          const correctAnsText = q.options[q.correctOption];
+          
+          div.style.cssText = `
+            background: var(--bg-surface-elevated);
+            border: 1px solid var(--border);
+            border-left: 4px solid ${q.isCorrect ? "var(--success)" : isAns ? "var(--danger)" : "var(--text-muted)"};
+            border-radius: var(--radius-sm);
+            padding: 12px 16px;
+          `;
+
+          div.innerHTML = `
+            <div style="font-weight:600; margin-bottom:6px; display:flex; justify-content:space-between; gap:12px;">
+              <span>Q${idx + 1}: ${escapeHTML(q.question)}</span>
+              <span class="badge ${q.isCorrect ? "badge-success" : isAns ? "badge-danger" : "badge-info"}">
+                ${q.isCorrect ? "Correct" : isAns ? "Incorrect" : "Skipped"}
+              </span>
+            </div>
+            <div style="font-size:0.85rem; color:var(--text-secondary); display:flex; flex-direction:column; gap:2px;">
+              <div>Your Answer: <strong style="color:${q.isCorrect ? "var(--success)" : "var(--danger)"};">${escapeHTML(userAnsText)}</strong></div>
+              <div>Correct Answer: <strong style="color:var(--success);">${escapeHTML(correctAnsText)}</strong></div>
+            </div>
+          `;
+          qContainer.appendChild(div);
+        });
+      }
+
+      modal.classList.add("active");
+    }
+
+    function escapeHTML(str) {
+      if (!str) return "";
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - ExamPro Portal</title>
+  <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <header class="navbar">
+    <a href="dashboard.html" class="nav-brand">
+      <div class="nav-logo-icon">
+        <img src="assets/logo.svg" alt="ExamPro">
+      </div>
+      <div>
+        <div class="nav-brand-title">Exam<span>Pro</span></div>
+        <div class="nav-brand-sub">Examination System</div>
+      </div>
+    </a>
+
+    <ul class="nav-links">
+      <li><a href="dashboard.html" class="nav-link active"><span>📊</span> Dashboard</a></li>
+      <li><a href="attempts.html" class="nav-link"><span>📜</span> My Attempts</a></li>
+      <li><a href="certificates.html" class="nav-link"><span>🏆</span> Certificates</a></li>
+    </ul>
+
+    <div class="nav-actions">
+      <div class="user-profile-chip">
+        <div class="user-avatar">ST</div>
+        <span class="user-name-display">Student</span>
+      </div>
+      <button type="button" class="btn-theme-toggle" title="Toggle Theme">🌙</button>
+      <button type="button" class="btn-logout" id="btnLogoutNav">Logout</button>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    
+    <!-- Welcome Hero -->
+    <section class="dashboard-hero">
+      <div class="hero-content">
+        <h1>Welcome, <span id="welcomeUserName" style="color: var(--primary);">Student</span>!</h1>
+        <p>
+          Select an academic subject below to begin your 100-question computer-based examination. Score 50% or higher to earn an official verified certificate.
+        </p>
+        <div style="margin-top: 14px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+          <span class="badge badge-primary">ID: <span id="studentRollDisplay">CS-2024-001</span></span>
+          <span class="badge badge-info"><span id="studentDeptDisplay">Computer Science</span></span>
+        </div>
+      </div>
+
+      <div class="hero-stats-row">
+        <div class="stat-chip">
+          <div class="stat-chip-number" id="dashTotalAttempts">0</div>
+          <div class="stat-chip-label">Exams Taken</div>
+        </div>
+        <div class="stat-chip">
+          <div class="stat-chip-number" id="dashCertificatesCount">0</div>
+          <div class="stat-chip-label">Certificates</div>
+        </div>
+        <div class="stat-chip">
+          <div class="stat-chip-number" id="dashAvgScore">0%</div>
+          <div class="stat-chip-label">Avg. Score</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Controls Bar -->
+    <div class="dashboard-controls">
+      <div class="search-box">
+        <span>🔍</span>
+        <input type="text" id="topicSearchInput" placeholder="Search examination subjects...">
+      </div>
+
+      <div class="category-filter-chips">
+        <button type="button" class="filter-chip active" data-category="all">All Topics</button>
+        <button type="button" class="filter-chip" data-category="Programming">Programming</button>
+        <button type="button" class="filter-chip" data-category="Core CS">Core CS</button>
+        <button type="button" class="filter-chip" data-category="Mathematics">Mathematics</button>
+        <button type="button" class="filter-chip" data-category="Web & Apps">Web & Apps</button>
+        <button type="button" class="filter-chip" data-category="Applied Engineering">Applied</button>
+      </div>
+    </div>
+
+    <!-- Topics Grid -->
+    <div class="topics-grid" id="topicsGrid">
+      <!-- Injected via JavaScript from EXAM_TOPICS -->
+    </div>
+
+  </main>
+
+  <footer class="site-footer">
+    <p>ExamPro Online Examination Portal • Multi-Subject Standardized Testing Engine</p>
+  </footer>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Scripts -->
+  <script src="js/theme.js"></script>
+  <script src="js/db.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/topics-data.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+      // Logout button binding
+      document.getElementById("btnLogoutNav").addEventListener("click", () => {
+        ExamAuth.logout();
+      });
+
+      // Load User Statistics from IndexedDB
+      const user = ExamAuth.getCurrentUser();
+      if (user) {
+        try {
+          const attempts = await ExamDB.getAllAttempts(user.username);
+          const certs = attempts.filter(a => a.passed);
+          
+          document.getElementById("dashTotalAttempts").textContent = attempts.length;
+          document.getElementById("dashCertificatesCount").textContent = certs.length;
+
+          if (attempts.length > 0) {
+            const sumPct = attempts.reduce((acc, curr) => acc + (curr.percentage || 0), 0);
+            const avg = Math.round(sumPct / attempts.length);
+            document.getElementById("dashAvgScore").textContent = `${avg}%`;
+          }
+        } catch (err) {
+          console.warn("Could not load stats from IndexedDB:", err);
+        }
+      }
+
+      // Render Topics Grid
+      renderTopics("all", "");
+
+      // Setup Search and Filter
+      const searchInput = document.getElementById("topicSearchInput");
+      const filterChips = document.querySelectorAll(".filter-chip");
+      let activeCategory = "all";
+
+      searchInput.addEventListener("input", (e) => {
+        renderTopics(activeCategory, e.target.value.trim().toLowerCase());
+      });
+
+      filterChips.forEach(chip => {
+        chip.addEventListener("click", () => {
+          filterChips.forEach(c => c.classList.remove("active"));
+          chip.classList.add("active");
+          activeCategory = chip.getAttribute("data-category");
+          renderTopics(activeCategory, searchInput.value.trim().toLowerCase());
+        });
+      });
+    });
+
+    function renderTopics(category, query) {
+      const container = document.getElementById("topicsGrid");
+      if (!container) return;
+
+      container.innerHTML = "";
+
+      const filtered = EXAM_TOPICS.filter(t => {
+        const matchesCategory = category === "all" || t.category === category;
+        const matchesQuery = !query || t.title.toLowerCase().includes(query) || t.description.toLowerCase().includes(query);
+        return matchesCategory && matchesQuery;
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--text-secondary);">
+            <h3>No examination subjects found</h3>
+            <p>Try modifying your search or filter criteria.</p>
+          </div>
+        `;
+        return;
+      }
+
+      filtered.forEach(topic => {
+        const card = document.createElement("div");
+        card.className = "topic-card";
+        card.innerHTML = `
+          <div>
+            <div class="topic-card-top">
+              <div class="topic-icon">${topic.icon}</div>
+              <span class="badge badge-primary">${topic.category}</span>
+            </div>
+            <div class="topic-card-body">
+              <h3>${topic.title}</h3>
+              <p>${topic.description}</p>
+            </div>
+          </div>
+
+          <div>
+            <div class="topic-meta-row">
+              <div class="topic-meta-item"><span>❓</span> ${topic.questionCount} Questions</div>
+              <div class="topic-meta-item"><span>⏱️</span> ${topic.durationMinutes} Mins</div>
+              <div class="topic-meta-item"><span>🎯</span> Pass: ${topic.passingScore}%</div>
+            </div>
+
+            <div class="topic-card-footer">
+              <a href="topics/${topic.id}.html" class="btn btn-primary btn-start-exam">
+                <span>Start Examination</span> →
+              </a>
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+  </script>
+</body>
+</html>

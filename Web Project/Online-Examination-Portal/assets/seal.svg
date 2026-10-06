@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <defs>
+    <linearGradient id="sealGrad" x1="0" y1="0" x2="120" y2="120" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#f59e0b"/>
+      <stop offset="50%" stop-color="#fbbf24"/>
+      <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+  </defs>
+  <circle cx="60" cy="60" r="54" fill="none" stroke="url(#sealGrad)" stroke-width="4" stroke-dasharray="3,3"/>
+  <circle cx="60" cy="60" r="48" fill="url(#sealGrad)" opacity="0.12"/>
+  <circle cx="60" cy="60" r="44" fill="none" stroke="url(#sealGrad)" stroke-width="2"/>
+  <!-- Star emblem -->
+  <polygon points="60,28 66,42 81,42 69,51 73,65 60,56 47,65 51,51 39,42 54,42" fill="url(#sealGrad)"/>
+  <text x="60" y="80" text-anchor="middle" fill="#d97706" font-size="9" font-family="'Inter', sans-serif" font-weight="bold" letter-spacing="2">VERIFIED</text>
+  <text x="60" y="92" text-anchor="middle" fill="#b45309" font-size="7" font-family="'Inter', sans-serif" font-weight="600" letter-spacing="1">EXAMPRO CERTIFIED</text>
+</svg>

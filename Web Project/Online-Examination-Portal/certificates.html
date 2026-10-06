@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Certificates - ExamPro Portal</title>
+  <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/certificates.css">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <header class="navbar">
+    <a href="dashboard.html" class="nav-brand">
+      <div class="nav-logo-icon">
+        <img src="assets/logo.svg" alt="ExamPro">
+      </div>
+      <div>
+        <div class="nav-brand-title">Exam<span>Pro</span></div>
+        <div class="nav-brand-sub">Examination System</div>
+      </div>
+    </a>
+
+    <ul class="nav-links">
+      <li><a href="dashboard.html" class="nav-link"><span>📊</span> Dashboard</a></li>
+      <li><a href="attempts.html" class="nav-link"><span>📜</span> My Attempts</a></li>
+      <li><a href="certificates.html" class="nav-link active"><span>🏆</span> Certificates</a></li>
+    </ul>
+
+    <div class="nav-actions">
+      <div class="user-profile-chip">
+        <div class="user-avatar">ST</div>
+        <span class="user-name-display">Student</span>
+      </div>
+      <button type="button" class="btn-theme-toggle" title="Toggle Theme">🌙</button>
+      <button type="button" class="btn-logout" id="btnLogoutNav">Logout</button>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="certificates-page-container">
+      
+      <!-- Section Header -->
+      <div class="section-header">
+        <div>
+          <h1 class="section-title">Verified Academic Certificates</h1>
+          <p class="section-subtitle">Official digitally signed credentials awarded for scoring 50% or above</p>
+        </div>
+        <a href="dashboard.html" class="btn btn-secondary btn-sm">
+          <span>←</span> Back to Dashboard
+        </a>
+      </div>
+
+      <!-- Certificates Grid -->
+      <div class="certificates-grid" id="certificatesGrid">
+        <!-- Dynamically loaded from IndexedDB -->
+      </div>
+
+      <!-- Empty State -->
+      <div id="emptyCertificatesState" class="empty-attempts-state glass-card hidden">
+        <div class="empty-icon" style="color: #f59e0b;">🏆</div>
+        <h3>No Certificates Earned Yet</h3>
+        <p style="color: var(--text-secondary); max-width: 480px;">
+          You haven't earned any certificates yet in this session. Complete any 100-question subject exam with a score of 50% or higher to unlock your official verified certificate!
+        </p>
+        <a href="dashboard.html" class="btn btn-primary btn-sm mt-4">
+          <span>Explore Examination Topics</span> →
+        </a>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Certificate Viewer & Print Modal -->
+  <div class="modal-overlay" id="certificateModal">
+    <div class="modal-card certificate-modal-content">
+      
+      <!-- The Printable Document Container -->
+      <div class="certificate-document" id="printableCertificateDoc">
+        <div class="cert-doc-header">
+          <div class="cert-org-logo">
+            <img src="assets/logo.svg" alt="ExamPro Emblem" style="width:100%; height:100%;">
+          </div>
+          <div class="cert-org-name">ExamPro Portal • Academic Board of Certification</div>
+          <div class="cert-main-title">Certificate of Achievement</div>
+        </div>
+
+        <div class="cert-presentation-text">This is proudly awarded to</div>
+        <div class="cert-student-name" id="certDocRecipientName">Student Name</div>
+
+        <div class="cert-fulfillment-text">
+          for successfully demonstrating proficiency and passing the standardized comprehensive examination in <strong class="cert-course-highlight" id="certDocSubjectTitle">Subject Title</strong> with demonstrated academic excellence.
+        </div>
+
+        <div class="cert-details-badges">
+          <div class="cert-pill">Score: <strong id="certDocScore">0 / 100</strong></div>
+          <div class="cert-pill">Percentage: <strong id="certDocPercentage">0%</strong></div>
+          <div class="cert-pill">Grade: <strong id="certDocGrade">A+</strong></div>
+        </div>
+
+        <div class="cert-footer-row">
+          <div class="cert-sign-col">
+            <div class="sign-line">Dr. Ronald Vance</div>
+            <div class="sign-title">Controller of Examinations</div>
+          </div>
+
+          <div class="cert-seal-center">
+            <img src="assets/seal.svg" alt="Official Seal">
+          </div>
+
+          <div class="cert-sign-col">
+            <div class="sign-line">Prof. Elena Rostova</div>
+            <div class="sign-title">Academic Board Director</div>
+          </div>
+        </div>
+
+        <div class="cert-verification-bar">
+          <div>Certificate ID: <strong id="certDocCertId">CERT-000-000000</strong></div>
+          <div>Issued: <span id="certDocIssueDate">Date</span></div>
+          <div>Verification: <strong style="color:#059669;">AUTHENTICATED</strong></div>
+        </div>
+      </div>
+
+      <!-- Modal Toolbar Actions (Hidden on Print) -->
+      <div style="background: var(--bg-surface-elevated); padding: 18px 24px; display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--border);">
+        <button type="button" class="btn btn-secondary" id="btnCloseCertModal">Close</button>
+        <button type="button" class="btn btn-primary" id="btnPrintCertBtn">
+          <span>🖨️</span> Print / Save PDF
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <p>ExamPro Online Examination Portal • Multi-Subject Standardized Testing Engine</p>
+  </footer>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Scripts -->
+  <script src="js/theme.js"></script>
+  <script src="js/db.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/topics-data.js"></script>
+  <script>
+    let certificatesList = [];
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      // Logout handler
+      document.getElementById("btnLogoutNav").addEventListener("click", () => {
+        ExamAuth.logout();
+      });
+
+      // Close modal
+      document.getElementById("btnCloseCertModal").onclick = () => {
+        document.getElementById("certificateModal").classList.remove("active");
+      };
+
+      // Print action
+      document.getElementById("btnPrintCertBtn").onclick = () => {
+        window.print();
+      };
+
+      // Load Certificates from IndexedDB
+      await loadCertificates();
+
+      // Check if URL specifies an ID (e.g. certificates.html?id=2)
+      const urlParams = new URLSearchParams(window.location.search);
+      const targetId = urlParams.get("id");
+      if (targetId) {
+        const item = certificatesList.find(c => String(c.id) === String(targetId));
+        if (item) {
+          openCertificateModal(item);
+        }
+      }
+    });
+
+    async function loadCertificates() {
+      const user = ExamAuth.getCurrentUser();
+      if (!user) return;
+
+      try {
+        certificatesList = await ExamDB.getPassedAttempts(user.username);
+        renderCertificates(certificatesList);
+      } catch (err) {
+        console.error("Error loading certificates from IndexedDB:", err);
+      }
+    }
+
+    function renderCertificates(list) {
+      const grid = document.getElementById("certificatesGrid");
+      const emptyState = document.getElementById("emptyCertificatesState");
+
+      grid.innerHTML = "";
+
+      if (list.length === 0) {
+        grid.classList.add("hidden");
+        emptyState.classList.remove("hidden");
+        return;
+      }
+
+      grid.classList.remove("hidden");
+      emptyState.classList.add("hidden");
+
+      list.forEach(item => {
+        const card = document.createElement("div");
+        card.className = "cert-card";
+        card.innerHTML = `
+          <div>
+            <div class="cert-card-top">
+              <span class="badge badge-success">Verified Credential</span>
+              <div class="cert-seal-mini">
+                <img src="assets/seal.svg" alt="Seal">
+              </div>
+            </div>
+            
+            <div class="cert-card-body">
+              <div style="font-size: 1.6rem; margin-bottom: 4px;">${item.quizIcon || "🎓"}</div>
+              <h3>${item.quizTitle || "Subject Examination"}</h3>
+              <div class="cert-recipient">Awarded to: <strong>${item.studentName}</strong></div>
+            </div>
+          </div>
+
+          <div>
+            <div class="cert-meta-row">
+              <div>Score: <strong>${item.percentage}% (${item.grade})</strong></div>
+              <div>${item.dateFormatted ? item.dateFormatted.split(",")[0] : "Recently"}</div>
+            </div>
+
+            <div style="margin-top: 14px;">
+              <button type="button" class="btn btn-primary btn-sm btn-view-cert" style="width: 100%;" data-id="${item.id}">
+                <span>🏆</span> View & Print Certificate
+              </button>
+            </div>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+
+      // Bind View Buttons
+      document.querySelectorAll(".btn-view-cert").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const id = Number(btn.getAttribute("data-id"));
+          const item = certificatesList.find(c => c.id === id);
+          if (item) openCertificateModal(item);
+        });
+      });
+    }
+
+    function openCertificateModal(item) {
+      document.getElementById("certDocRecipientName").textContent = item.studentName || "Student";
+      document.getElementById("certDocSubjectTitle").textContent = item.quizTitle || "Examination";
+      document.getElementById("certDocScore").textContent = `${item.marks} / ${item.totalMarks}`;
+      document.getElementById("certDocPercentage").textContent = `${item.percentage}%`;
+      document.getElementById("certDocGrade").textContent = item.grade;
+      document.getElementById("certDocCertId").textContent = item.certificateId || `CERT-${item.id}-2026`;
+      document.getElementById("certDocIssueDate").textContent = item.dateFormatted || new Date().toLocaleDateString();
+
+      document.getElementById("certificateModal").classList.add("active");
+    }
+  </script>
+</body>
+</html>
