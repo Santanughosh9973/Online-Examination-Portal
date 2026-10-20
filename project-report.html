@@ -6,6 +6,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>EXAMPRO Project Report - Online Examination Portal</title>
   <style>
+    :root {
+      --report-font: "Times New Roman", Times, serif;
+      --border-width: 1.5px;
+      --border-style: solid;
+    }
+
     /* =========================================================
        ACADEMIC PROJECT REPORT - PRINT & DISPLAY STYLESHEET
        Strict A4 Dimensions & Printable Page Breaks
@@ -19,7 +25,7 @@
 
     body {
       background-color: #4b5563;
-      font-family: "Times New Roman", Times, serif;
+      font-family: var(--report-font);
       color: #0f172a;
       line-height: 1.45;
       font-size: 10.5pt;
@@ -45,6 +51,8 @@
       font-size: 1.05rem;
       font-weight: 600;
       letter-spacing: 0.3px;
+      color: #ffffff;
+      text-align: left;
     }
 
     .print-btn {
@@ -67,6 +75,57 @@
       transform: translateY(-1px);
     }
 
+    /* Editor Controls */
+    .editor-tools {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      font-size: 0.85rem;
+    }
+
+    .editor-tools label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .editor-tools select {
+      padding: 6px 8px;
+      border-radius: 6px;
+      border: 1px solid #334155;
+      background: #1e293b;
+      color: #ffffff;
+      font-size: 0.85rem;
+    }
+
+    .tool-btn {
+      background: #334155;
+    }
+
+    .tool-btn:hover {
+      background: #475569;
+    }
+
+    .tool-btn.active {
+      background: #16a34a;
+    }
+
+    .save-status {
+      font-size: 0.8rem;
+      opacity: 0.8;
+      min-width: 90px;
+    }
+
+    body.editing .page-content:hover,
+    body.editing .page-border > div:hover {
+      outline: 1px dashed #93c5fd;
+    }
+
+    body.editing [contenteditable="true"]:focus {
+      outline: none;
+    }
+
     /* Page Container */
     .report-container {
       display: flex;
@@ -77,7 +136,8 @@
 
     .page {
       width: 210mm;
-      min-height: 297mm;
+      height: 297mm;
+      overflow: hidden;
       margin: 14px auto;
       background: #ffffff;
       padding: 9mm;
@@ -88,9 +148,10 @@
     }
 
     .page-border {
-      border: 1.5px solid #111827;
+      border: var(--border-width) var(--border-style) #111827;
       width: 100%;
-      min-height: calc(297mm - 18mm);
+      height: 100%;
+      overflow: hidden;
       padding: 14mm 16mm 10mm 16mm;
       display: flex;
       flex-direction: column;
@@ -296,12 +357,12 @@
         page-break-after: always !important;
         break-after: page !important;
         break-inside: avoid !important;
-        min-height: 297mm;
-        height: auto;
+        height: 297mm;
       }
 
-      .page-border {
-        min-height: calc(297mm - 18mm);
+      .page:last-child {
+        page-break-after: auto !important;
+        break-after: auto !important;
       }
     }
   </style>
@@ -315,9 +376,35 @@
       <h2>ExamPro: Online Examination Portal — Final Year Project Report</h2>
       <small style="opacity: 0.85;">Brainware University • Department of Computational Sciences • May 2026</small>
     </div>
-    <button type="button" class="print-btn" onclick="window.print()">
-      <span>🖨️</span> Save as PDF / Print
-    </button>
+    <div class="editor-tools">
+      <label>Border
+        <select id="borderSelect">
+          <option value="1.5px solid">Single</option>
+          <option value="3px solid">Thick</option>
+          <option value="4px double">Double</option>
+          <option value="1.5px dashed">Dashed</option>
+          <option value="2px dotted">Dotted</option>
+          <option value="0px none">None</option>
+        </select>
+      </label>
+      <label>Font
+        <select id="fontSelect">
+          <option value='"Times New Roman", Times, serif'>Times New Roman</option>
+          <option value='Georgia, serif'>Georgia</option>
+          <option value='Cambria, Caladea, serif'>Cambria</option>
+          <option value='"Palatino Linotype", "Book Antiqua", Palatino, serif'>Palatino</option>
+          <option value='Arial, Helvetica, sans-serif'>Arial</option>
+          <option value='Calibri, Carlito, sans-serif'>Calibri</option>
+          <option value='Verdana, Geneva, sans-serif'>Verdana</option>
+        </select>
+      </label>
+      <button type="button" class="print-btn tool-btn" id="editBtn">✏️ Edit</button>
+      <button type="button" class="print-btn tool-btn" id="saveBtn">💾 Save</button>
+      <span class="save-status" id="saveStatus"></span>
+      <button type="button" class="print-btn" onclick="window.print()">
+        <span>🖨️</span> Save as PDF / Print
+      </button>
+    </div>
   </div>
 
   <div class="report-container">
@@ -2143,6 +2230,149 @@ resetExamState() {
     </div>
 
   </div>
+
+  <script>
+    /* Auto-fit: shrink a page's content just enough to stay inside one A4 sheet */
+    function fitPage(border) {
+      var content = border.querySelector(".page-content");
+      if (!content) return;
+      content.style.zoom = 1;
+      if (border.scrollHeight <= border.clientHeight) return;
+      var lo = 0.6, hi = 1;
+      for (var i = 0; i < 12; i++) {
+        var mid = (lo + hi) / 2;
+        content.style.zoom = mid;
+        if (border.scrollHeight <= border.clientHeight) lo = mid; else hi = mid;
+      }
+      content.style.zoom = lo;
+    }
+
+    function fitPages() {
+      document.querySelectorAll(".page-border").forEach(fitPage);
+    }
+    window.addEventListener("load", fitPages);
+    window.addEventListener("beforeprint", fitPages);
+
+    /* Editor: border style, font, in-place editing, save back to file */
+    (function () {
+      var root = document.documentElement;
+      var borderSelect = document.getElementById("borderSelect");
+      var fontSelect = document.getElementById("fontSelect");
+      var editBtn = document.getElementById("editBtn");
+      var saveBtn = document.getElementById("saveBtn");
+      var saveStatus = document.getElementById("saveStatus");
+      var fileHandle = null;
+      var dirty = false;
+
+      function setStatus(text) {
+        saveStatus.textContent = text;
+      }
+
+      function markDirty() {
+        dirty = true;
+        setStatus("Unsaved changes");
+      }
+
+      // Show the current settings in the dropdowns
+      var css = getComputedStyle(root);
+      var currentBorder = css.getPropertyValue("--border-width").trim() + " " + css.getPropertyValue("--border-style").trim();
+      var currentFont = css.getPropertyValue("--report-font").trim();
+      Array.prototype.forEach.call(borderSelect.options, function (o) { if (o.value === currentBorder) o.selected = true; });
+      Array.prototype.forEach.call(fontSelect.options, function (o) { if (o.value === currentFont) o.selected = true; });
+
+      borderSelect.addEventListener("change", function () {
+        var parts = borderSelect.value.split(" ");
+        root.style.setProperty("--border-width", parts[0]);
+        root.style.setProperty("--border-style", parts[1]);
+        fitPages();
+        markDirty();
+      });
+
+      fontSelect.addEventListener("change", function () {
+        root.style.setProperty("--report-font", fontSelect.value);
+        fitPages();
+        markDirty();
+      });
+
+      editBtn.addEventListener("click", function () {
+        var on = !document.body.classList.contains("editing");
+        document.body.classList.toggle("editing", on);
+        editBtn.classList.toggle("active", on);
+        editBtn.textContent = on ? "✅ Done" : "✏️ Edit";
+        document.querySelectorAll(".page-border").forEach(function (b) {
+          if (on) b.setAttribute("contenteditable", "true");
+          else b.removeAttribute("contenteditable");
+        });
+      });
+
+      document.querySelector(".report-container").addEventListener("input", function (e) {
+        var border = e.target.closest(".page-border");
+        if (border) fitPage(border);
+        markDirty();
+      });
+
+      // Build a clean copy of the page, without editor state
+      function serialize() {
+        var clone = root.cloneNode(true);
+        clone.querySelectorAll("[contenteditable]").forEach(function (el) { el.removeAttribute("contenteditable"); });
+        clone.querySelectorAll(".page-content").forEach(function (el) {
+          el.style.removeProperty("zoom");
+          if (!el.getAttribute("style")) el.removeAttribute("style");
+        });
+        clone.querySelector("body").classList.remove("editing");
+        if (!clone.querySelector("body").className) clone.querySelector("body").removeAttribute("class");
+        var cloneEditBtn = clone.querySelector("#editBtn");
+        cloneEditBtn.classList.remove("active");
+        cloneEditBtn.textContent = "✏️ Edit";
+        clone.querySelector("#saveStatus").textContent = "";
+        clone.querySelectorAll("#borderSelect option, #fontSelect option").forEach(function (o) { o.removeAttribute("selected"); });
+        return "<!DOCTYPE html>\n" + clone.outerHTML;
+      }
+
+      async function save() {
+        var html = serialize();
+        try {
+          if (window.showSaveFilePicker) {
+            if (!fileHandle) {
+              fileHandle = await window.showSaveFilePicker({
+                suggestedName: "project-report.html",
+                types: [{ description: "HTML file", accept: { "text/html": [".html"] } }]
+              });
+            }
+            var writable = await fileHandle.createWritable();
+            await writable.write(html);
+            await writable.close();
+          } else {
+            var link = document.createElement("a");
+            link.href = URL.createObjectURL(new Blob([html], { type: "text/html" }));
+            link.download = "project-report.html";
+            link.click();
+            URL.revokeObjectURL(link.href);
+          }
+          dirty = false;
+          setStatus("Saved ✓");
+        } catch (err) {
+          if (err.name !== "AbortError") setStatus("Save failed");
+        }
+      }
+
+      saveBtn.addEventListener("click", save);
+
+      document.addEventListener("keydown", function (e) {
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "s") {
+          e.preventDefault();
+          save();
+        }
+      });
+
+      window.addEventListener("beforeunload", function (e) {
+        if (dirty) {
+          e.preventDefault();
+          e.returnValue = "";
+        }
+      });
+    })();
+  </script>
 
 </body>
 
